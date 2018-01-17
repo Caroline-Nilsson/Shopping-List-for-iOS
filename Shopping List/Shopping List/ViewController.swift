@@ -10,17 +10,23 @@ import UIKit
 
 class ViewController: UIViewController, UITableViewDelegate, UITableViewDataSource {
     
+    var refresher: UIRefreshControl!
 
     @IBOutlet weak var shoppingListView: UITableView!
     @IBOutlet weak var scrollView: UIScrollView!
     @IBOutlet weak var addItemButton: UIButton!
     @IBOutlet weak var addItemTextField: UITextField!
     @IBOutlet weak var shoppingListLabel: UILabel!
+    @IBOutlet weak var amountTextField: UITextField!
     
-    var shoppingItems: [String] = ["sallad", "tomater", "gurka"]
+    var shoppingItems: [String] = []
+    var amount: [String] = []
 
     override func viewDidLoad() {
         super.viewDidLoad()
+        
+        refresher = UIRefreshControl()
+        
         
         //list view seturp
         shoppingListView.delegate = self
@@ -28,6 +34,9 @@ class ViewController: UIViewController, UITableViewDelegate, UITableViewDataSour
         
         //text field setup
         addItemTextField.delegate = self
+        amountTextField.delegate = self
+        
+        scrollView.isScrollEnabled = true
         
     }
 
@@ -42,12 +51,26 @@ class ViewController: UIViewController, UITableViewDelegate, UITableViewDataSour
     }
     
     func tableView(_ tableView: UITableView, cellForRowAt indexPath: IndexPath) -> UITableViewCell {
-        let cell = shoppingListView.dequeueReusableCell(withIdentifier: "cell")
-        cell?.textLabel?.text = shoppingItems[indexPath.row]
-        return cell!
+        let cell = shoppingListView.dequeueReusableCell(withIdentifier: "cell") as! CustomTableViewCell
+        cell.titleLbl.text = shoppingItems[indexPath.row]
+        cell.detailLbl.text = amount[indexPath.row]
+        
+        return cell
     }
+    
+    func refresh() {
+        self.shoppingListView.reloadData()
+        self.refresher.endRefreshing()
+        
+    }
+    
     @IBAction func onAddItemButtonPressed(_ sender: Any) {
         shoppingItems.append(addItemTextField.text!)
+        amount.append(amountTextField.text!)
+        addItemTextField.text = ""
+        amountTextField.text = ""
+        refresh()
+        
     }
     
 
