@@ -69,6 +69,8 @@ class ViewController: UIViewController, UITableViewDelegate, UITableViewDataSour
         amount.append(amountTextField.text!)
         addItemTextField.text = ""
         amountTextField.text = ""
+        textFieldShouldReturn(addItemTextField)
+        textFieldShouldReturn(amountTextField)
         refresh()
         
     }
